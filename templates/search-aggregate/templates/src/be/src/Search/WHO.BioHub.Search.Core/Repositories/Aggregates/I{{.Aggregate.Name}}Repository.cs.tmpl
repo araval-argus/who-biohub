@@ -1,0 +1,10 @@
+namespace WHO.BioHub.Search.Core.Repositories.Aggregates;
+
+public interface I{{.Aggregate.Name}}Repository
+{
+    Task<{{.Aggregate.Name}}DALResponse> {{.Aggregate.Name}}({{.Aggregate.Name}}DALQuery query, CancellationToken cancellationToken);
+}
+
+public record struct {{.Aggregate.Name}}DALQuery(/* TODO: complete here */);
+
+public record struct {{.Aggregate.Name}}DALResponse(/* TODO: complete here */);

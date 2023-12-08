@@ -1,0 +1,49 @@
+using FluentValidation.Results;
+using Microsoft.Extensions.Logging;
+using WHO.BioHub.Models.Models;
+using WHO.BioHub.Models.Repositories.{{.Entity.Plural}};
+using WHO.BioHub.Shared.Utils;
+
+namespace WHO.BioHub.{{.Module.Name}}.Core.UseCases.{{.Entity.Plural}}.List{{.Entity.Plural}};
+
+public interface IList{{.Entity.Plural}}Handler
+{
+    Task<Either<List{{.Entity.Plural}}QueryResponse, Errors>> Handle(List{{.Entity.Plural}}Query query, CancellationToken cancellationToken);
+}
+
+public class List{{.Entity.Plural}}Handler : IList{{.Entity.Plural}}Handler
+{
+    private readonly ILogger<List{{.Entity.Plural}}Handler> _logger;
+    private readonly List{{.Entity.Plural}}QueryValidator _validator;
+    private readonly I{{.Entity.Singular}}ReadRepository _readRepository;
+
+    public List{{.Entity.Plural}}Handler(
+        ILogger<List{{.Entity.Plural}}Handler> logger,
+        List{{.Entity.Plural}}QueryValidator validator,
+        I{{.Entity.Singular}}ReadRepository readRepository)
+    {
+        _logger = logger;
+        _validator = validator;
+        _readRepository = readRepository;
+    }
+
+    public async Task<Either<List{{.Entity.Plural}}QueryResponse, Errors>> Handle(
+        List{{.Entity.Plural}}Query query,
+        CancellationToken cancellationToken)
+    {
+        ValidationResult validationResult = await _validator.ValidateAsync(query, cancellationToken);
+        if (!validationResult.IsValid)
+            return new(new Errors(validationResult));
+
+        try
+        {
+            IEnumerable<{{.Entity.Singular}}> {{.Entity.Plural | lower}} = await _readRepository.List(cancellationToken);
+            return new(new List{{.Entity.Plural}}QueryResponse({{.Entity.Plural | lower}}));
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error retrieving all {{.Entity.Plural}}");
+            throw;
+        }
+    }
+}

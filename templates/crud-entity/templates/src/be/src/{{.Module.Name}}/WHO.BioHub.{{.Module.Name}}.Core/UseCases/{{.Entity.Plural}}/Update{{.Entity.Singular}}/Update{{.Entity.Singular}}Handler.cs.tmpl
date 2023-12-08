@@ -1,0 +1,59 @@
+using FluentValidation.Results;
+using Microsoft.Extensions.Logging;
+using WHO.BioHub.Models.Models;
+using WHO.BioHub.Models.Repositories.{{.Entity.Plural}};
+using WHO.BioHub.Shared.Utils;
+
+namespace WHO.BioHub.{{.Module.Name}}.Core.UseCases.{{.Entity.Plural}}.Update{{.Entity.Singular}};
+
+public interface IUpdate{{.Entity.Singular}}Handler
+{
+    Task<Either<Update{{.Entity.Singular}}CommandResponse, Errors>> Handle(Update{{.Entity.Singular}}Command command, CancellationToken cancellationToken);
+}
+
+public class Update{{.Entity.Singular}}Handler : IUpdate{{.Entity.Singular}}Handler
+{
+    private readonly ILogger<Update{{.Entity.Singular}}Handler> _logger;
+    private readonly Update{{.Entity.Singular}}CommandValidator _validator;
+    private readonly IUpdate{{.Entity.Singular}}Mapper _mapper;
+    private readonly I{{.Entity.Singular}}WriteRepository _writeRepository;
+
+    public Update{{.Entity.Singular}}Handler(
+        ILogger<Update{{.Entity.Singular}}Handler> logger,
+        Update{{.Entity.Singular}}CommandValidator validator,
+        IUpdate{{.Entity.Singular}}Mapper mapper,
+        I{{.Entity.Singular}}WriteRepository writeRepository
+    )
+    {
+        _logger = logger;
+        _validator = validator;
+        _mapper = mapper;
+        _writeRepository = writeRepository;
+    }
+
+    public async Task<Either<Update{{.Entity.Singular}}CommandResponse, Errors>> Handle(
+        Update{{.Entity.Singular}}Command command,
+        CancellationToken cancellationToken)
+    {
+        ValidationResult validationResult = await _validator.ValidateAsync(command, cancellationToken);
+        if (!validationResult.IsValid)
+            return new(new Errors(validationResult));
+
+        try
+        {
+            {{.Entity.Singular}} {{.Entity.Singular | lower}} = await _writeRepository.ReadForUpdate(command.Id, cancellationToken);
+            {{.Entity.Singular | lower}} = _mapper.Map({{.Entity.Singular | lower}}, command);
+
+            Errors? errors = await _writeRepository.Update({{.Entity.Singular | lower}}, cancellationToken);
+            if (errors.HasValue)
+                return new(errors.Value);
+
+            return new(new Update{{.Entity.Singular}}CommandResponse({{.Entity.Singular | lower}}));
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error creating a new {{.Entity.Singular}}");
+            throw;
+        }
+    }
+}

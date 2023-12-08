@@ -1,0 +1,35 @@
+using Microsoft.Extensions.DependencyInjection;
+using WHO.BioHub.{{.Module.Name}}.Core.UseCases.{{.Entity.Plural}}.Create{{.Entity.Singular}};
+using WHO.BioHub.{{.Module.Name}}.Core.UseCases.{{.Entity.Plural}}.Delete{{.Entity.Singular}};
+using WHO.BioHub.{{.Module.Name}}.Core.UseCases.{{.Entity.Plural}}.List{{.Entity.Plural}};
+using WHO.BioHub.{{.Module.Name}}.Core.UseCases.{{.Entity.Plural}}.Read{{.Entity.Singular}};
+using WHO.BioHub.{{.Module.Name}}.Core.UseCases.{{.Entity.Plural}}.Update{{.Entity.Singular}};
+
+namespace WHO.BioHub.{{.Module.Name}}.Core.Extensions;
+
+public static class IServiceCollection{{.Entity.Plural}}Extensions
+{
+    public static IServiceCollection AddCore{{.Entity.Plural}}(this IServiceCollection services)
+    {
+        services
+            .AddScoped<ICreate{{.Entity.Singular}}Handler, Create{{.Entity.Singular}}Handler>()
+            .AddScoped<ICreate{{.Entity.Singular}}Mapper, Create{{.Entity.Singular}}Mapper>()
+            .AddScoped<Create{{.Entity.Singular}}CommandValidator>()
+
+            .AddScoped<IRead{{.Entity.Singular}}Handler, Read{{.Entity.Singular}}Handler>()
+            .AddScoped<Read{{.Entity.Singular}}QueryValidator>()
+
+            .AddScoped<IUpdate{{.Entity.Singular}}Handler, Update{{.Entity.Singular}}Handler>()
+            .AddScoped<IUpdate{{.Entity.Singular}}Mapper, Update{{.Entity.Singular}}Mapper>()
+            .AddScoped<Update{{.Entity.Singular}}CommandValidator>()
+
+            .AddScoped<IDelete{{.Entity.Singular}}Handler, Delete{{.Entity.Singular}}Handler>()
+            .AddScoped<Delete{{.Entity.Singular}}CommandValidator>()
+
+            .AddScoped<IList{{.Entity.Plural}}Handler, List{{.Entity.Plural}}Handler>()
+            .AddScoped<List{{.Entity.Plural}}QueryValidator>()
+            ;
+
+        return services;
+    }
+}

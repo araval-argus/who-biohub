@@ -1,0 +1,41 @@
+trigger:
+  tags:
+    include:
+      - fe/v*.*.*
+
+resources:
+  - repo: self
+
+variables:
+  agent: "ubuntu-latest"
+
+jobs:
+  - job: BuildStaticWebApp
+    steps:
+      - checkout: self
+        clean: true
+        submodules: false
+
+      - bash: |
+          cat << EOF > ./src/fe/.env
+          VUE_APP_API_DATA_URL=$(apiDataURL)
+          VUE_APP_API_PUBLICDATA_URL=$(apiPublicDataURL)
+          VUE_APP_API_DOCUMENT_URL=$(apiDocumentURL)
+          VUE_APP_MSAL_CLIENT_ID=$(clientId)
+          VUE_APP_MSAL_AUTHORITY=$(authority)
+          VUE_APP_MSAL_REDIRECT_URI=$(redirectUri)
+          VUE_APP_MSAL_POST_LOGOUT_REDIRECT_URI=$(logoutRedirectUri)
+          VUE_APP_MSAL_SCOPES=$(scopes)
+          VUE_APP_GOOGLE_SITE_KEY=$(googleSiteKey)
+          VUE_APP_URL_DOC=$(publicDocumentResourcesUrl)
+          VUE_APP_NAME_TERMSANDCONDITIONS=$(termsAndConditionDocument)
+          VUE_APP_ENV=$(env)
+          EOF
+        displayName: Override .env file
+
+      - task: AzureStaticWebApp@0
+        displayName: Deploy Azure Static Web App
+        inputs:
+          app_location: "/src/fe"
+          output_location: "/dist"
+          azure_static_web_apps_api_token: $(deployment_token)

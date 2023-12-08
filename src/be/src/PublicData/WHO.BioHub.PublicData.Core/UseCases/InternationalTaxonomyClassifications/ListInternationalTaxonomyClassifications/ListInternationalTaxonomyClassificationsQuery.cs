@@ -1,0 +1,3 @@
+namespace WHO.BioHub.PublicData.Core.UseCases.InternationalTaxonomyClassifications.ListInternationalTaxonomyClassifications;
+
+public record struct ListInternationalTaxonomyClassificationsQuery(Guid Id) { }

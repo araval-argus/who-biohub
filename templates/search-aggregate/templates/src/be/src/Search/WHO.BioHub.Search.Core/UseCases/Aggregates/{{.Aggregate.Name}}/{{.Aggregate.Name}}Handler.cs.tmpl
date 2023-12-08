@@ -1,0 +1,66 @@
+using FluentValidation.Results;
+using Microsoft.Extensions.Logging;
+using WHO.BioHub.Search.Core.Repositories.Aggregates;
+
+using WHO.BioHub.Shared.Utils;
+
+namespace WHO.BioHub.Search.Core.UseCases.Aggregates.{{.Aggregate.Name}};
+
+public interface I{{.Aggregate.Name}}Handler
+{
+    Task<Either<{{.Aggregate.Name}}QueryResponse, Errors>> Handle({{.Aggregate.Name}}Query query, CancellationToken cancellationToken);
+}
+
+public class {{.Aggregate.Name}}Handler : I{{.Aggregate.Name}}Handler
+{
+    private readonly ILogger<{{.Aggregate.Name}}Handler> _logger;
+    private readonly {{.Aggregate.Name}}QueryValidator _validator;
+    private readonly I{{.Aggregate.Name}}Repository _searchRepository;
+
+    public {{.Aggregate.Name}}Handler(
+        ILogger<{{.Aggregate.Name}}Handler> logger,
+        {{.Aggregate.Name}}QueryValidator validator,
+        I{{.Aggregate.Name}}Repository searchRepository)
+    {
+        _logger = logger;
+        _validator = validator;
+        _searchRepository = searchRepository;
+    }
+
+    public async Task<Either<{{.Aggregate.Name}}QueryResponse, Errors>> Handle(
+        {{.Aggregate.Name}}Query query,
+        CancellationToken cancellationToken)
+    {
+        ValidationResult validationResult = await _validator.ValidateAsync(query, cancellationToken);
+        if (!validationResult.IsValid)
+            return new(new Errors(validationResult));
+
+        try
+        {
+            {{.Aggregate.Name}}DALQuery dalQuery = MapQuery(query);
+
+            {{.Aggregate.Name}}DALResponse {{.Aggregate.Name | lower}} =
+                await _searchRepository.{{.Aggregate.Name}}(dalQuery, cancellationToken);
+
+            {{.Aggregate.Name}}QueryResponse response = MapResponse({{.Aggregate.Name | lower}});
+            return new(response);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error searching {{.Aggregate.Name}} with query {query}", query);
+            throw;
+        }
+    }
+
+    public static {{.Aggregate.Name}}DALQuery MapQuery({{.Aggregate.Name}}Query query)
+    {
+        // TODO: complete here
+        throw new NotImplementedException();
+    }
+
+    public static {{.Aggregate.Name}}QueryResponse MapResponse({{.Aggregate.Name}}DALResponse dalResponse)
+    {
+        // TODO: complete here
+        throw new NotImplementedException();
+    }
+}

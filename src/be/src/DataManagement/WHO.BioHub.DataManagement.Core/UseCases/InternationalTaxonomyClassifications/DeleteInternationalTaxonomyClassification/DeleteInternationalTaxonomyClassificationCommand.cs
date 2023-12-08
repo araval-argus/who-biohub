@@ -1,0 +1,3 @@
+namespace WHO.BioHub.DataManagement.Core.UseCases.InternationalTaxonomyClassifications.DeleteInternationalTaxonomyClassification;
+
+public record struct DeleteInternationalTaxonomyClassificationCommand(Guid Id) { }

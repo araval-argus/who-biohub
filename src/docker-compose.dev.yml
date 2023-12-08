@@ -1,0 +1,115 @@
+version: "3"
+name: "biohub-dev"
+services:
+  func-data:
+    image: ${WHOBIOHUB_CR:-who/biohub}/func-data:${WHOBIOHUB_FUNC_DATA_VERSION:-dev}
+    build:
+      dockerfile: DataManagement/WHO.BioHub.DataManagement.FunctionApp/Dockerfile
+      context: be/src/
+    environment:
+      Application__BaseUrl: "http://localhost:12000/#/"
+      ConnectionStrings__SQLServer: "Server=sql,1433;Database=biohub;User ID=sa;Password=Sup3rsecret;TrustServerCertificate=True"
+      OpenApi__HostNames: "http://localhost:12000/api/data/api,http://localhost:12081/api"
+      AzureAd__Instance: "https://login.microsoftonline.com"
+      AzureAd__TenantId: "e37d39a6-2a90-4b82-9a5f-6cdd1bcfe037"
+      AzureAd__Domain: "progetest.onmicrosoft.com"
+      AzureAd__ClientId: "ce87428a-bf13-438d-8c6c-72bde1d83b33"
+      AzureAd__Audience: "api://4ec29eb8-9eb6-4692-a4ed-00a56ff79384"
+      GraphAd__TenantId: "e37d39a6-2a90-4b82-9a5f-6cdd1bcfe037"
+      GraphAd__ClientId: "4ec29eb8-9eb6-4692-a4ed-00a56ff79384"
+      GraphAd__ClientSecret: "Sup3rsecret"
+      GraphAd__Scopes__0: "User.Read"
+      GraphAd__Scopes__1: "User.Invite.All"
+      GraphInvitation__InviteRedirectUrl: "http://localhost:12000"
+      GraphInvitation__SendInvitationMessage: "true"
+      StorageAccount__DocumentTemplatesConnection: "Sup3rsecret"
+      StorageAccount__DocumentTemplatesContainerReference: "documenttemplates"
+      StorageAccount__DocumentsConnection: "Sup3rsecret"
+      StorageAccount__DocumentsContainerReference: "documents"
+      StorageAccount__PublicDocumentsConnectionKey: "Sup3rsecret"
+      StorageAccount__PublicDocumentsAccountReference: "whobiohubdpubsta01"
+      StorageAccount__PublicDocumentsContainerReference: "resourcetest"
+      StorageAccount__PublicDocumentsConnectionBaseUrl: "https://whobiohubdpubsta01.blob.core.windows.net"
+      StorageAccount__PublicDocumentsSasExpirationMinutes: "5"
+      MailServiceConfig__DefaultFrom: "\"WHO BioHub IT Tool\" <biohub.who@gmail.com>"
+      MailServiceConfig__DefaultSubject: "WHO BioHub notification email"
+      MailServiceConfig__DefaultProvider: "GOOGLE"
+      SmtpClientConfig__Smtp: "smtp.gmail.com"
+      SmtpClientConfig__Username: "biohub.who@gmail.com"
+      SmtpClientConfig__Password: "Sup3rsecret"
+      SmtpClientConfig__Port: 587
+      SmtpClientConfig__EnableSsl: true
+      GoogleConfig__GoogleVerifyUrl: "https://www.google.com/recaptcha/api/siteverify"
+      GoogleConfig__SiteKey: "6LeIx7MiAAAAAE9DpM3VijS8yZE_wZi7fEFrQLFj"
+      GoogleConfig__SecretKey: "Sup3rsecret"
+    ports:
+      - 12081:80
+
+  func-publicdata:
+    image: ${WHOBIOHUB_CR:-who/biohub}/func-publicdata:${WHOBIOHUB_FUNC_PUBLICDATA_VERSION:-dev}
+    build:
+      dockerfile: PublicData/WHO.BioHub.PublicData.FunctionApp/Dockerfile
+      context: be/src/
+    environment:
+      ConnectionStrings__SQLServer: "Server=sql,1433;Database=biohub;User ID=sa;Password=Sup3rsecret;TrustServerCertificate=True"
+      OpenApi__HostNames: "http://localhost:12000/api/publicdata/api,http://localhost:12084/api"
+      MailServiceConfig__DefaultFrom: "\"WHO BioHub IT Tool\" <biohub.who@gmail.com>"
+      MailServiceConfig__DefaultSubject: "WHO BioHub notification email"
+      MailServiceConfig__DefaultProvider: "GOOGLE"
+      SmtpClientConfig__Smtp: "smtp.gmail.com"
+      SmtpClientConfig__Username: "biohub.who@gmail.com"
+      SmtpClientConfig__Password: "Sup3rsecret"
+      SmtpClientConfig__Port: 587
+      SmtpClientConfig__EnableSsl: true
+      GoogleConfig__GoogleVerifyUrl: "https://www.google.com/recaptcha/api/siteverify"
+      GoogleConfig__SiteKey: "6LeIx7MiAAAAAE9DpM3VijS8yZE_wZi7fEFrQLFj"
+      GoogleConfig__SecretKey: "Sup3rsecret"
+      StorageAccount__PublicDocumentsConnectionKey": "Sup3rsecret"
+      StorageAccount__PublicDocumentsAccountReference: "whobiohubdpubsta01"
+      StorageAccount__PublicDocumentsContainerReference: "resourcetest"
+      StorageAccount__PublicDocumentsConnectionBaseUrl: "https://whobiohubdpubsta01.blob.core.windows.net"
+      StorageAccount__PublicDocumentsSasExpirationMinutes: "5"
+    ports:
+      - 12084:80    
+
+  func-document:
+    image: ${WHOBIOHUB_CR:-who/biohub}/func-document:${WHOBIOHUB_FUNC_DOCUMENT_VERSION:-dev}
+    build:
+      dockerfile: DocumentManagement/WHO.BioHub.DocumentManagement.FunctionApp/Dockerfile
+      context: be/src/
+    environment:
+      ConnectionStrings__SQLServer: "Server=sql,1433;Database=biohub;User ID=sa;Password=Sup3rsecret;TrustServerCertificate=True"
+      OpenApi__HostNames: "http://localhost:12000/api/document/api,http://localhost:12082/api"
+    ports:
+      - 12082:80
+
+  func-search:
+    image: ${WHOBIOHUB_CR:-who/biohub}/func-search:${WHOBIOHUB_FUNC_SEARCH_VERSION:-dev}
+    build:
+      dockerfile: Search/WHO.BioHub.Search.FunctionApp/Dockerfile
+      context: be/src/
+    environment:
+      ConnectionStrings__SQLServer: "Server=sql,1433;Database=biohub;User ID=sa;Password=Sup3rsecret;TrustServerCertificate=True"
+      OpenApi__HostNames: "http://localhost:12000/api/search/api,http://localhost:12083/api"
+    ports:
+      - 12083:80
+
+  fe:
+    build:
+      dockerfile: Dockerfile
+      context: fe/
+      args:
+        VUE_APP_API_DATA_URL: "http://localhost:12000/api/data/api"
+        VUE_APP_API_PUBLICDATA_URL: "http://localhost:12000/api/publicdata/api"
+        VUE_APP_API_DOCUMENT_URL: "http://localhost:12000/api/document/api"
+        VUE_APP_MSAL_CLIENT_ID: "ce87428a-bf13-438d-8c6c-72bde1d83b33"
+        VUE_APP_MSAL_AUTHORITY: "https://login.microsoftonline.com/e37d39a6-2a90-4b82-9a5f-6cdd1bcfe037"
+        VUE_APP_MSAL_REDIRECT_URI: "http://localhost:12000/"
+        VUE_APP_MSAL_POST_LOGOUT_REDIRECT_URI: "http://localhost:12000/"
+        VUE_APP_MSAL_SCOPES: "api://4ec29eb8-9eb6-4692-a4ed-00a56ff79384/user_impersonation"
+        VUE_APP_GOOGLE_SITE_KEY: "6LeIx7MiAAAAAE9DpM3VijS8yZE_wZi7fEFrQLFj"
+        VUE_APP_URL_DOC: "https://whobiohubdpubsta01.blob.core.windows.net/resources/"
+        VUE_APP_NAME_TERMSANDCONDITIONS: "https://whobiohubdpubsta01.blob.core.windows.net/public/230124_Terms of Use_WHO BioHub System Operational Platform_vFinal.pdf"
+        VUE_APP_ENV: "dev"
+    ports:
+      - 12080:80

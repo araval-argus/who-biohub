@@ -1,0 +1,74 @@
+using System.Net;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
+using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
+using WHO.BioHub.{{.Module.Name}}.API.Http.Controllers;
+using WHO.BioHub.{{.Module.Name}}.Core.UseCases.{{.Entity.Plural}}.Update{{.Entity.Singular}};
+using WHO.BioHub.Shared.Utils;
+
+namespace WHO.BioHub.{{.Module.Name}}.FunctionApp.Functions.{{.Entity.Plural}};
+
+public class Update{{.Entity.Singular}}
+{
+    private readonly I{{.Entity.Plural}}Controller _controller;
+
+    public Update{{.Entity.Singular}}(I{{.Entity.Plural}}Controller controller)
+    {
+        _controller = controller;
+    }
+
+    [FunctionName(nameof(Update{{.Entity.Singular}}))]
+    [OpenApiOperation(operationId: "Update{{.Entity.Singular}}")]
+        [OpenApiParameter(
+        name: "id",
+        Required = true,
+        Description = "{{.Entity.Singular}} Id",
+        Type = typeof(Guid),
+        In = ParameterLocation.Path)]
+    [OpenApiRequestBody(
+        contentType: "application/json",
+        bodyType: typeof(Update{{.Entity.Singular}}Command)
+    )]
+    [OpenApiResponseWithBody(
+        statusCode: HttpStatusCode.OK,
+        contentType: "application/json",
+        bodyType: typeof(Update{{.Entity.Singular}}CommandResponse),
+        Description = "The OK response")]
+    [OpenApiResponseWithBody(
+        statusCode: HttpStatusCode.NotFound,
+        contentType: "application/json",
+        bodyType: typeof(Errors),
+        Description = "Resource not found")]
+    [OpenApiResponseWithBody(
+        statusCode: HttpStatusCode.BadRequest,
+        contentType: "application/json",
+        bodyType: typeof(Errors),
+        Description = "Bad request")]
+    public async Task<IActionResult> UpdateAsync(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "patch", Route = "{{.Entity.Plural | lower}}/{id:Guid}")] HttpRequest req,
+        ILogger log,
+        Guid id,
+        CancellationToken funcCancellationToken)
+    {
+        try
+        {
+            log.LogInformation("Update {{.Entity.Singular}} function (HttpTrigger) invoked.");
+
+            CancellationTokenSource cancellationSource =
+                CancellationTokenSource.CreateLinkedTokenSource(funcCancellationToken, req.HttpContext.RequestAborted);
+            CancellationToken cancellationToken = cancellationSource.Token;
+
+            IActionResult response = await _controller.Update(req, id, cancellationToken);
+            return response;
+        }
+        catch (Exception e)
+        {
+            log.LogError(e, "Error executing update {{.Entity.Singular | lower}} function");
+            throw;
+        }
+    }
+}

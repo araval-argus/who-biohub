@@ -1,0 +1,47 @@
+import TemperatureTransportCondition from "./enums/TemperatureTransportCondition.vue";
+import { CourierBookingFormUser } from "@/models/CourierBookingFormUser";
+import { WorklistFromBioHubItemMaterial } from "./WorklistFromBioHubItemMaterial";
+import { MaterialShippingInformation } from "./MaterialShippingInformation";
+
+export interface CourierBookingForm {
+  Id: string;
+  WorklistToBioHubItemId: string;
+  WorklistFromBioHubItemId: string;
+  ShipmentDirection: string;
+  TransportCategoryId: string;
+  TransportCategoryName: string;
+  TransportCategoryDescription: string;
+  Date: Date;
+  RequestDateOfPickup: Date;
+  TemperatureTransportCondition: TemperatureTransportCondition;
+  NumberOfVialsAndMls: string;
+  NumberOfInnerPackagingAndSize: string;
+  BookingFormPickupUsers: Array<CourierBookingFormUser>;
+  BookingFormCourierUsers: Array<CourierBookingFormUser>;
+  BookingFormLaboratoryFocalPoints: Array<CourierBookingFormUser>;
+  BookingFormBioHubFacilityFocalPoints: Array<CourierBookingFormUser>;
+  CourierId: string;
+  EstimateDateOfPickup: Date;
+  DateOfPickup: Date;
+  ShipmentReferenceNumber: string;
+  DateOfDelivery: Date;
+  RequestingUserBusinessPhone: string;
+  RequestingUserMobilePhone: string;
+  RequestingUserFirstName: string;
+  RequestingUserLastName: string;
+  RequestingUserEmail: string;
+  RequestingUserJobTitle: string;
+  WorklistReferenceNumber: string;
+  LaboratoryName: string;
+  LaboratoryAddress: string;
+  LaboratoryAbbreviation: string;
+  LaboratoryCountry: string;
+  BioHubFacilityName: string;
+  BioHubFacilityAddress: string;
+  BioHubFacilityCountry: string;
+  WorklistFromBioHubItemMaterials: Array<WorklistFromBioHubItemMaterial>;
+  MaterialShippingInformations: Array<MaterialShippingInformation>;
+  TotalNumberOfVials: number;
+  TotalAmount: number;
+  TransportMode: string;
+}

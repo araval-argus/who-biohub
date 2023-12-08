@@ -1,0 +1,52 @@
+using FluentValidation.Results;
+using Microsoft.Extensions.Logging;
+using WHO.BioHub.Models.Repositories.{{.Entity.Plural}};
+using WHO.BioHub.Shared.Utils;
+
+namespace WHO.BioHub.{{.Module.Name}}.Core.UseCases.{{.Entity.Plural}}.Delete{{.Entity.Singular}};
+
+public interface IDelete{{.Entity.Singular}}Handler
+{
+    Task<Either<Delete{{.Entity.Singular}}CommandResponse, Errors>> Handle(Delete{{.Entity.Singular}}Command command, CancellationToken cancellationToken);
+}
+
+public class Delete{{.Entity.Singular}}Handler : IDelete{{.Entity.Singular}}Handler
+{
+    private readonly ILogger<Delete{{.Entity.Singular}}Handler> _logger;
+    private readonly Delete{{.Entity.Singular}}CommandValidator _validator;
+    private readonly I{{.Entity.Singular}}WriteRepository _writeRepository;
+
+    public Delete{{.Entity.Singular}}Handler(
+        ILogger<Delete{{.Entity.Singular}}Handler> logger,
+        Delete{{.Entity.Singular}}CommandValidator validator,
+        I{{.Entity.Singular}}WriteRepository writeRepository
+    )
+    {
+        _logger = logger;
+        _validator = validator;
+        _writeRepository = writeRepository;
+    }
+
+    public async Task<Either<Delete{{.Entity.Singular}}CommandResponse, Errors>> Handle(
+        Delete{{.Entity.Singular}}Command command,
+        CancellationToken cancellationToken)
+    {
+        ValidationResult validationResult = await _validator.ValidateAsync(command, cancellationToken);
+        if (!validationResult.IsValid)
+            return new(new Errors(validationResult));
+
+        try
+        {
+            Errors? errors = await _writeRepository.Delete(command.Id, cancellationToken);
+            if (errors.HasValue)
+                return new(errors.Value);
+
+            return new(new Delete{{.Entity.Singular}}CommandResponse());
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error deleting the {{.Entity.Singular}} with {id}", command.Id);
+            throw;
+        }
+    }
+}

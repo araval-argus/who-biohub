@@ -1,0 +1,26 @@
+using Microsoft.EntityFrameworkCore;
+using WHO.BioHub.Models.Models;
+using WHO.BioHub.Models.Repositories.{{.Entity.Plural}};
+
+namespace WHO.BioHub.Search.SQL.Repositories.Entities;
+
+partial class SQL{{.Entity.Singular}}SearchRepository : I{{.Entity.Singular}}SearchRepository
+{
+    public async Task<IEnumerable<{{.Entity.Singular}}>> {{.Rule.Name}}({{.Rule.Name}}DALQuery query, CancellationToken cancellationToken)
+    {
+        return await _dbContext.{{.Entity.Plural}}
+            .AsNoTracking()
+            .Where(l => l.DeletedOn == null)
+            .{{.Rule.Name}}(query)
+            .ToListAsync(cancellationToken);
+    }
+}
+
+internal static class {{.Rule.Name}}Extensions
+{
+    internal static IQueryable<{{.Entity.Singular}}> {{.Rule.Name}}(this IQueryable<{{.Entity.Singular}}> entities, {{.Rule.Name}}DALQuery query)
+    {
+        // TODO: complete here
+        throw new NotImplementedException();
+    }
+}

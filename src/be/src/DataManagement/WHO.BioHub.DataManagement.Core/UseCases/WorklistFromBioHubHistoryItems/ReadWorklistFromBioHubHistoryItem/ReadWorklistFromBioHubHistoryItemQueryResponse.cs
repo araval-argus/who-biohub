@@ -1,0 +1,5 @@
+using WHO.BioHub.Models.Models;
+
+namespace WHO.BioHub.DataManagement.Core.UseCases.WorklistFromBioHubHistoryItems.ReadWorklistFromBioHubHistoryItem;
+
+public record struct ReadWorklistFromBioHubHistoryItemQueryResponse(WorklistFromBioHubHistoryItem WorklistFromBioHubHistoryItem) { }

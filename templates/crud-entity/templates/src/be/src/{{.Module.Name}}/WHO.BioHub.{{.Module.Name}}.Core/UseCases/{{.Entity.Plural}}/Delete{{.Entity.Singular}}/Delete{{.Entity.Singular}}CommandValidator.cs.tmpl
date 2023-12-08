@@ -1,0 +1,11 @@
+using FluentValidation;
+
+namespace WHO.BioHub.{{.Module.Name}}.Core.UseCases.{{.Entity.Plural}}.Delete{{.Entity.Singular}};
+
+public class Delete{{.Entity.Singular}}CommandValidator : AbstractValidator<Delete{{.Entity.Singular}}Command>
+{
+    public Delete{{.Entity.Singular}}CommandValidator()
+    {
+        RuleFor(cmd => cmd);
+    }
+}

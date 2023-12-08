@@ -1,0 +1,12 @@
+using FluentValidation;
+
+namespace WHO.BioHub.Search.Core.UseCases.{{.Entity.Plural}}.{{.Rule.Name}};
+
+public class {{.Rule.Name}}QueryValidator : AbstractValidator<{{.Rule.Name}}Query>
+{
+    public {{.Rule.Name}}QueryValidator()
+    {
+        // TODO: complete here
+        RuleFor(cmd => cmd);
+    }
+}

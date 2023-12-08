@@ -1,0 +1,38 @@
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using WHO.BioHub.API.Http.Extensions;
+using WHO.BioHub.Search.Core.UseCases.Aggregates.{{.Aggregate.Name}};
+using WHO.BioHub.Shared.Utils;
+
+namespace WHO.BioHub.Search.API.Http.Controllers.{{.Aggregate.Name}};
+
+public interface I{{.Aggregate.Name}}Controller
+{
+    Task<IActionResult> {{.Aggregate.Name}}(HttpRequest request, CancellationToken cancellationToken);
+}
+
+public class {{.Aggregate.Name}}Controller : ControllerBase, I{{.Aggregate.Name}}Controller
+{
+    private readonly I{{.Aggregate.Name}}Handler _search{{.Aggregate.Name}}Handler;
+
+    public {{.Aggregate.Name}}Controller(
+        I{{.Aggregate.Name}}Handler search{{.Aggregate.Name}}Handler)
+    {
+        _search{{.Aggregate.Name}}Handler = search{{.Aggregate.Name}}Handler;
+    }
+
+    public async Task<IActionResult> {{.Aggregate.Name}}(HttpRequest request, CancellationToken cancellationToken)
+    {
+        Either<{{.Aggregate.Name}}Query, Errors> body =
+            await request.ParseBodyJson<{{.Aggregate.Name}}Query>(cancellationToken);
+        if (body.IsRight)
+            return body.Right.ToIActionResult();
+
+        Either<{{.Aggregate.Name}}QueryResponse, Errors> result =
+            await _search{{.Aggregate.Name}}Handler.Handle(body.Left, cancellationToken);
+        if (result.IsRight)
+            return result.Right.ToIActionResult();
+
+        return new OkObjectResult(result.Left);
+    }
+}

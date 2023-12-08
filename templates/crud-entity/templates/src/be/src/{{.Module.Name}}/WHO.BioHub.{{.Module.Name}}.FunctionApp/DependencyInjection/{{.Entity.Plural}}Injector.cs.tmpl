@@ -1,0 +1,20 @@
+﻿using Microsoft.Extensions.DependencyInjection;
+using WHO.BioHub.{{.Module.Name}}.API.Http.Extensions;
+using WHO.BioHub.{{.Module.Name}}.Core.Extensions;
+using WHO.BioHub.DAL.Extensions;
+
+namespace WHO.BioHub.{{.Module.Name}}.DependencyInjection;
+
+public class {{.Entity.Plural}}Injector : IInjector
+{
+    public IServiceCollection InjectDependencies(IServiceCollection services)
+    {
+        return services
+                // driving adapters
+                .AddAPIHttp{{.Entity.Plural}}()
+                // application
+                .AddCore{{.Entity.Plural}}()
+                // driven adapters
+                .AddDAL{{.Entity.Plural}}();
+    }
+}

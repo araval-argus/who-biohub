@@ -1,0 +1,5 @@
+using WHO.BioHub.Models.Models;
+
+namespace WHO.BioHub.DataManagement.Core.UseCases.MaterialClinicalDetailsHistory.ReadMaterialClinicalDetailHistory;
+
+public record struct ReadMaterialClinicalDetailHistoryQueryResponse(MaterialClinicalDetailHistory MaterialClinicalDetailHistory) { }

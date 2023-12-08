@@ -1,0 +1,28 @@
+using WHO.BioHub.Models.Models;
+
+namespace WHO.BioHub.{{.Module.Name}}.Core.UseCases.{{.Entity.Plural}}.Create{{.Entity.Singular}};
+
+public interface ICreate{{.Entity.Singular}}Mapper
+{
+    {{.Entity.Singular}} Map(Create{{.Entity.Singular}}Command command);
+}
+
+public class Create{{.Entity.Singular}}Mapper : ICreate{{.Entity.Singular}}Mapper
+{
+    public {{.Entity.Singular}} Map(Create{{.Entity.Singular}}Command command)
+    {
+        // TODO: Implement mapper
+
+        {{.Entity.Singular}} {{.Entity.Singular | lower}} = new()
+        {
+            Id = Guid.NewGuid(),
+            CreationDate = DateTime.UtcNow,
+
+            // ...
+
+            DeletedOn = null,
+        };
+
+        return {{.Entity.Singular | lower}};
+    }
+}

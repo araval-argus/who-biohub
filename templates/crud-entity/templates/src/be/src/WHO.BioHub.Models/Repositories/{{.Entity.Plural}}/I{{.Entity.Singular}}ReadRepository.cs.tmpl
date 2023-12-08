@@ -1,0 +1,9 @@
+﻿using WHO.BioHub.Models.Models;
+
+namespace WHO.BioHub.Models.Repositories.{{.Entity.Plural}};
+
+public interface I{{.Entity.Singular}}ReadRepository
+{
+    Task<{{.Entity.Singular}}> Read(Guid id, CancellationToken cancellationToken);
+    Task<IEnumerable<{{.Entity.Singular}}>> List(CancellationToken cancellationToken);
+}

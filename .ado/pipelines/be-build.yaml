@@ -1,0 +1,21 @@
+trigger: none
+
+resources:
+  - repo: self
+
+variables:
+  agent: "ubuntu-latest"
+
+jobs:
+  - job: BuildFunctionApp
+    steps:
+      - checkout: self
+        clean: true
+        submodules: false
+
+      - bash: |
+          docker compose \
+            -f "src/docker-compose.yml" \
+            -f "src/docker-compose.demo.yml" \
+            build func-data func-document func-search func-publicdata
+        displayName: "Build Azure Function App"

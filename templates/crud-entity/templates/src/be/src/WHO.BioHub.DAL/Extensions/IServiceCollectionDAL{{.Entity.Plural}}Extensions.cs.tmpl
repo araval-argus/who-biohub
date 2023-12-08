@@ -1,0 +1,17 @@
+using Microsoft.Extensions.DependencyInjection;
+using WHO.BioHub.Models.Repositories.{{.Entity.Plural}};
+using WHO.BioHub.DAL.Repositories;
+
+namespace WHO.BioHub.DAL.Extensions;
+
+public static class IServiceCollectionDAL{{.Entity.Plural}}Extensions
+{
+    public static IServiceCollection AddDAL{{.Entity.Plural}}(this IServiceCollection services)
+    {
+        services
+            .AddScoped<I{{.Entity.Singular}}ReadRepository, SQL{{.Entity.Singular}}ReadRepository>()
+            .AddScoped<I{{.Entity.Singular}}WriteRepository, SQL{{.Entity.Singular}}WriteRepository>();
+
+        return services;
+    }
+}

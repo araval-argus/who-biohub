@@ -1,0 +1,5 @@
+using WHO.BioHub.Models.Models;
+
+namespace WHO.BioHub.DataManagement.Core.UseCases.InternationalTaxonomyClassifications.UpdateInternationalTaxonomyClassification;
+
+public record struct UpdateInternationalTaxonomyClassificationCommandResponse(InternationalTaxonomyClassification InternationalTaxonomyClassification) { }

@@ -1,0 +1,5 @@
+Module:
+  Name: DataManagement
+Entity:
+  Singular: UserProfile
+  Plural: UserProfiles

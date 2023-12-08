@@ -1,0 +1,29 @@
+using Microsoft.EntityFrameworkCore;
+using WHO.BioHub.Models.Models;
+using WHO.BioHub.Models.Repositories.{{.Entity.Plural}};
+
+namespace WHO.BioHub.DAL.Repositories;
+
+public class SQL{{.Entity.Singular}}ReadRepository : I{{.Entity.Singular}}ReadRepository
+{
+    private readonly BioHubDbContext _dbContext;
+
+    public SQL{{.Entity.Singular}}ReadRepository(BioHubDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public async Task<IEnumerable<{{.Entity.Singular}}>> List(CancellationToken cancellationToken)
+    {
+        return await _dbContext.{{.Entity.Plural}}
+            .Where(l => l.DeletedOn == null)
+            .ToArrayAsync(cancellationToken);
+    }
+
+    public async Task<{{.Entity.Singular}}> Read(Guid id, CancellationToken cancellationToken)
+    {
+        return await _dbContext.{{.Entity.Plural}}
+            .AsNoTracking()
+            .FirstOrDefaultAsync(l => l.DeletedOn == null && l.Id == id, cancellationToken);
+    }
+}

@@ -1,0 +1,21 @@
+using Microsoft.EntityFrameworkCore;
+using WHO.BioHub.DAL;
+using WHO.BioHub.Search.Core.Repositories.Aggregates;
+
+namespace WHO.BioHub.Search.SQL.Repositories.Aggregates;
+
+public class SQL{{.Aggregate.Name}}Repository : I{{.Aggregate.Name}}Repository
+{
+    private readonly BioHubDbContext _dbContext;
+
+    public SQL{{.Aggregate.Name}}Repository(BioHubDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public async Task<{{.Aggregate.Name}}DALResponse> {{.Aggregate.Name}}({{.Aggregate.Name}}DALQuery query, CancellationToken cancellationToken)
+    {
+        // TODO: complete here
+        throw new NotImplementedException();
+    }
+}

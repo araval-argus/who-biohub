@@ -1,0 +1,3 @@
+namespace WHO.BioHub.DataManagement.Core.UseCases.MaterialShippingInformationsHistory.DeleteMaterialShippingInformationHistory;
+
+public record struct DeleteMaterialShippingInformationHistoryCommand(Guid Id) { }

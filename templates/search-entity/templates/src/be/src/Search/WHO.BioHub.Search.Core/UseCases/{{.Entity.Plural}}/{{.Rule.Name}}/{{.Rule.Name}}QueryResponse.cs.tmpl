@@ -1,0 +1,5 @@
+using WHO.BioHub.Models.Models;
+
+namespace WHO.BioHub.Search.Core.UseCases.{{.Entity.Plural}}.{{.Rule.Name}};
+
+public record struct {{.Rule.Name}}QueryResponse(IEnumerable<{{.Entity.Singular}}> {{.Entity.Plural}}) { }

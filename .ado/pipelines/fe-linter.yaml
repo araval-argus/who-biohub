@@ -1,0 +1,39 @@
+trigger: none
+
+resources:
+  - repo: self
+
+variables:
+  agent: "ubuntu-latest"
+
+jobs:
+  - job: Lint
+    steps:
+      - checkout: self
+        clean: true
+        submodules: false
+
+      - bash: |
+          pushd src/fe/
+          npm install
+          popd
+        displayName: "Install dependencies"
+
+      - bash: |
+          ./scripts/fe/lint-fe-check.sh && exit 0
+          rt="$?"
+          echo "lint script failed with error: $rt"
+
+          # if script failed
+          [ "$rt" == "$err_code" ] && exit ${rt}
+
+          # if linter found error
+          echo "setting pipeline variable 'lint_result' to 'nok'"
+          echo "##vso[task.setvariable variable=lint_result]nok"
+
+          exit "$rt"
+        env:
+          solution_folder: "./src"
+          update_tool: "true"
+          err_code: 100
+        displayName: "Run Linter"

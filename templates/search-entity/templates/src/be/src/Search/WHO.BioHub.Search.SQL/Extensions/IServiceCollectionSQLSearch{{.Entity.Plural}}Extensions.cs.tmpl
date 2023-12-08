@@ -1,0 +1,16 @@
+using Microsoft.Extensions.DependencyInjection;
+using WHO.BioHub.Models.Repositories.{{.Entity.Plural}};
+using WHO.BioHub.Search.SQL.Repositories.Entities;
+
+namespace WHO.BioHub.Search.SQL.Extensions;
+
+public static class IServiceCollectionSQLSearch{{.Entity.Plural}}Extensions
+{
+    public static IServiceCollection AddSQLSearch{{.Entity.Plural}}(this IServiceCollection services)
+    {
+        services
+            .AddScoped<I{{.Entity.Singular}}SearchRepository, SQL{{.Entity.Singular}}SearchRepository>();
+
+        return services;
+    }
+}

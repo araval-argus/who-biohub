@@ -1,0 +1,11 @@
+using FluentValidation;
+
+namespace WHO.BioHub.{{.Module.Name}}.Core.UseCases.{{.Entity.Plural}}.Create{{.Entity.Singular}};
+
+public class Create{{.Entity.Singular}}CommandValidator : AbstractValidator<Create{{.Entity.Singular}}Command>
+{
+    public Create{{.Entity.Singular}}CommandValidator()
+    {
+        RuleFor(cmd => cmd);
+    }
+}

@@ -1,0 +1,15 @@
+using Microsoft.Extensions.DependencyInjection;
+using WHO.BioHub.{{.Module.Name}}.API.Http.Controllers;
+
+namespace WHO.BioHub.{{.Module.Name}}.API.Http.Extensions;
+
+public static class IServiceCollectionAPIHttp{{.Entity.Plural}}Extensions
+{
+    public static IServiceCollection AddAPIHttp{{.Entity.Plural}}(this IServiceCollection services)
+    {
+        services
+            .AddScoped<I{{.Entity.Plural}}Controller, {{.Entity.Plural}}Controller>();
+
+        return services;
+    }
+}

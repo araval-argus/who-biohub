@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\WHO.BioHub.Search.Core\WHO.BioHub.Search.Core.csproj" />
+    <ProjectReference Include="..\..\WHO.BioHub.API.Http.Extensions\WHO.BioHub.API.Http.Extensions.csproj" />
+    <ProjectReference Include="..\..\WHO.BioHub.Shared\WHO.BioHub.Shared.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

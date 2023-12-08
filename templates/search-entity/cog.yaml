@@ -1,0 +1,7 @@
+Entity:
+    Singular: Laboratory
+    Plural: Laboratories
+Rule:
+    Name: SearchLaboratoriesByCountry
+Endpoint:
+    Path: "Country"

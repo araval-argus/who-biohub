@@ -1,0 +1,14 @@
+﻿using WHO.BioHub.Models.Models;
+
+namespace WHO.BioHub.Models.Repositories.{{.Entity.Plural}};
+
+public partial interface I{{.Entity.Singular}}SearchRepository
+{
+    Task<IEnumerable<{{.Entity.Singular}}>> {{.Rule.Name}}({{.Rule.Name}}DALQuery query, CancellationToken cancellationToken);
+}
+
+public record struct {{.Rule.Name}}DALQuery(
+    // TODO: complete here
+) {
+    // TODO: complete here
+}

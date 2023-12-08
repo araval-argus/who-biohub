@@ -1,0 +1,59 @@
+using FluentValidation.Results;
+using Microsoft.Extensions.Logging;
+using WHO.BioHub.Models.Models;
+using WHO.BioHub.Models.Repositories.{{.Entity.Plural}};
+using WHO.BioHub.Shared.Utils;
+
+namespace WHO.BioHub.Search.Core.UseCases.{{.Entity.Plural}}.{{.Rule.Name}};
+
+public interface I{{.Rule.Name}}Handler
+{
+    Task<Either<{{.Rule.Name}}QueryResponse, Errors>> Handle({{.Rule.Name}}Query query, CancellationToken cancellationToken);
+}
+
+public class {{.Rule.Name}}Handler : I{{.Rule.Name}}Handler
+{
+    private readonly ILogger<{{.Rule.Name}}Handler> _logger;
+    private readonly {{.Rule.Name}}QueryValidator _validator;
+    private readonly I{{.Entity.Singular}}SearchRepository _readRepository;
+
+    public {{.Rule.Name}}Handler(
+        ILogger<{{.Rule.Name}}Handler> logger,
+        {{.Rule.Name}}QueryValidator validator,
+        I{{.Entity.Singular}}SearchRepository readRepository)
+    {
+        _logger = logger;
+        _validator = validator;
+        _readRepository = readRepository;
+    }
+
+    public async Task<Either<{{.Rule.Name}}QueryResponse, Errors>> Handle(
+        {{.Rule.Name}}Query query,
+        CancellationToken cancellationToken)
+    {
+        ValidationResult validationResult = await _validator.ValidateAsync(query, cancellationToken);
+        if (!validationResult.IsValid)
+            return new(new Errors(validationResult));
+
+        try
+        {
+            {{.Rule.Name}}DALQuery dalQuery = MapQuery(query);
+
+            IEnumerable<{{.Entity.Singular}}> {{.Entity.Plural | lower}} =
+                await _readRepository.{{.Rule.Name}}(dalQuery, cancellationToken);
+
+            return new(new {{.Rule.Name}}QueryResponse({{.Entity.Plural | lower}}));
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error searching {{.Entity.Singular}} with query {query}", query);
+            throw;
+        }
+    }
+
+    public static {{.Rule.Name}}DALQuery MapQuery({{.Rule.Name}}Query query)
+    {
+        // TODO: complete here
+        throw new NotImplementedException();
+    }
+}

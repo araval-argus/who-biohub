@@ -1,0 +1,3 @@
+namespace WHO.BioHub.DataManagement.Core.UseCases.MaterialShippingInformationsHistory.ReadMaterialShippingInformationHistory;
+
+public record struct ReadMaterialShippingInformationHistoryQuery(Guid Id) { }

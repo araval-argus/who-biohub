@@ -1,0 +1,15 @@
+using Microsoft.Extensions.DependencyInjection;
+using WHO.BioHub.Search.API.Http.Controllers.{{.Rule.Name}};
+
+namespace WHO.BioHub.Search.API.Http.Extensions;
+
+public class IServiceCollectionAPIHttp{{.Rule.Name}}Injector : IInjector
+{
+    public IServiceCollection InjectDependencies(IServiceCollection services)
+    {
+        services
+            .AddScoped<I{{.Rule.Name}}Controller, {{.Rule.Name}}Controller>();
+
+        return services;
+    }
+}

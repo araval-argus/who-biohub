@@ -1,0 +1,54 @@
+trigger:
+  tags:
+    include:
+      - be/v*.*.*
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  artifactName: 'WHO.BioHub'
+  buildConfiguration: 'Release'
+  functionSuffix: "FunctionApp"
+
+steps:
+
+- task: UseDotNet@2
+  displayName: 'Use .NET 6 runtime'
+  inputs:
+    packageType: 'runtime'
+    version: '6.0.x'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build'
+  inputs:
+    command: 'build'
+    projects: 'src/be/src/**/*.csproj'
+    arguments: --configuration $(buildConfiguration)
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish Data Management Function'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    arguments: '-r linux-x64 --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    projects: 'src/be/src/DataManagement/**/$(artifactName).DataManagement.$(functionSuffix).csproj'
+    zipAfterPublish: true
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish Public Data Function'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    arguments: '-r linux-x64 --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    projects: 'src/be/src/PublicData/**/$(artifactName).PublicData.$(functionSuffix).csproj'
+    zipAfterPublish: true
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Upload Artifacts'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: '$(artifactName)'

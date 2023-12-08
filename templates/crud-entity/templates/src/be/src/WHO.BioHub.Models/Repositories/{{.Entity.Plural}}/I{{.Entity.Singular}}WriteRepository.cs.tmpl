@@ -1,0 +1,12 @@
+﻿using WHO.BioHub.Shared.Utils;
+using WHO.BioHub.Models.Models;
+
+namespace WHO.BioHub.Models.Repositories.{{.Entity.Plural}};
+
+public interface I{{.Entity.Singular}}WriteRepository
+{
+    Task<Either<{{.Entity.Singular}}, Errors>> Create({{.Entity.Singular}} {{.Entity.Singular | lower}}, CancellationToken cancellationToken);
+    Task<Errors?> Delete(Guid id, CancellationToken cancellationToken);
+    Task<{{.Entity.Singular}}> ReadForUpdate(Guid id, CancellationToken cancellationToken);
+    Task<Errors?> Update({{.Entity.Singular}} {{.Entity.Singular | lower}}, CancellationToken cancellationToken);
+}

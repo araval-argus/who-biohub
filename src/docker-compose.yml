@@ -1,0 +1,44 @@
+version: "3"
+name: "biohub-demo"
+services:
+  sql:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: Sup3rsecret
+    ports:
+      - 14330:1433
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "/opt/mssql-tools/bin/sqlcmd -S . -U sa -P Sup3rsecret -Q 'SET NOEXEC ON' || exit 1",
+        ]
+      interval: 3s
+      timeout: 2s
+      retries: 10
+      start_period: 5s
+
+  migrator:
+    image: ${WHOBIOHUB_CR:-who/biohub}/migrator:${WHOBIOHUB_MIGRATOR_VERSION:-dev}
+    build:
+      dockerfile: WHO.BioHub.DAL.Migrator/Dockerfile
+      context: be/src/
+    environment:
+      ConnectionStrings__SQLServer: "Server=sql,1433;Database=biohub;User ID=sa;Password=Sup3rsecret;TrustServerCertificate=True;"
+      SKIP_CONFIRM: "skip"
+    depends_on:
+      sql:
+        condition: service_healthy
+
+  seeder:
+    image: ${WHOBIOHUB_CR:-who/biohub}/seeder:${WHOBIOHUB_SEEDER_VERSION:-dev}
+    build:
+      dockerfile: WHO.BioHub.DAL.Seeder/Dockerfile
+      context: be/src/
+    environment:
+      ConnectionStrings__SQLServer: "Server=sql,1433;Database=biohub;User ID=sa;Password=Sup3rsecret;TrustServerCertificate=True;"
+      SKIP_CONFIRM: "skip"
+    depends_on:
+      migrator:
+        condition: service_completed_successfully

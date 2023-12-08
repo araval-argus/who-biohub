@@ -1,0 +1,3 @@
+namespace WHO.BioHub.DataManagement.Core.UseCases.SMTA1WorkflowHistoryItems.CreateSMTA1WorkflowHistoryItem;
+
+public record struct CreateSMTA1WorkflowHistoryItemCommand { }

@@ -1,0 +1,3 @@
+namespace WHO.BioHub.DataManagement.Core.UseCases.WorklistToBioHubItemEvents.ListWorklistToBioHubItemEvents;
+
+public record struct ListWorklistToBioHubItemEventsQuery(Guid WorklistToBioHubItemId) { }

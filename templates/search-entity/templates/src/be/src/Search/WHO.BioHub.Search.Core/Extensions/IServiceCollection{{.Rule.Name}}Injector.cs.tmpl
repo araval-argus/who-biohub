@@ -1,0 +1,17 @@
+using Microsoft.Extensions.DependencyInjection;
+using WHO.BioHub.Search.Core.UseCases.{{.Entity.Plural}}.{{.Rule.Name}};
+
+namespace WHO.BioHub.Search.Core.Extensions;
+
+public class IServiceCollection{{.Rule.Name}}Injector : IInjector
+{
+    public IServiceCollection InjectDependencies(IServiceCollection services)
+    {
+        services
+            .AddScoped<I{{.Rule.Name}}Handler, {{.Rule.Name}}Handler>()
+            .AddScoped<{{.Rule.Name}}QueryValidator>()
+            ;
+
+        return services;
+    }
+}

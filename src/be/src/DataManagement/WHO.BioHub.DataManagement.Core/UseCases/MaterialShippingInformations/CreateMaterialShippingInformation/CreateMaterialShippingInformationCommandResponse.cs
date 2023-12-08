@@ -1,0 +1,5 @@
+using WHO.BioHub.Models.Models;
+
+namespace WHO.BioHub.DataManagement.Core.UseCases.MaterialShippingInformations.CreateMaterialShippingInformation;
+
+public record struct CreateMaterialShippingInformationCommandResponse(MaterialShippingInformation MaterialShippingInformation) { }

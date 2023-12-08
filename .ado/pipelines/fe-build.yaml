@@ -1,0 +1,21 @@
+trigger: none
+
+resources:
+  - repo: self
+
+variables:
+  agent: "ubuntu-latest"
+
+jobs:
+  - job: BuildFrontEnd
+    steps:
+      - checkout: self
+        clean: true
+        submodules: false
+
+      - bash: |
+          docker compose \
+            -f "src/docker-compose.yml" \
+            -f "src/docker-compose.demo.yml" \
+            build fe
+        displayName: "Build Front-end SPA"

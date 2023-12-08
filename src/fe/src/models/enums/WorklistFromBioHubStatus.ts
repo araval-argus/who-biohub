@@ -1,0 +1,17 @@
+export enum WorklistFromBioHubStatus {
+  RequestInitiation = 0,
+  SubmitAnnex2OfSMTA2 = 3,
+  WaitingForAnnex2OfSMTA2SECsApproval = 4,
+  SubmitBiosafetyChecklistFormOfSMTA2 = 5,
+  WaitForBiosafetyChecklistFormSMTA2BSFsApproval = 6,
+  SubmitBookingFormOfSMTA2 = 7,
+  WaitForBookingFormSMTA2OPSsApproval = 8,
+  SubmitBHFSMTA2ShipmentDocuments = 9,
+  SubmitQESMTA2ShipmentDocuments = 10,
+  WaitForPickUpCompleted = 11,
+  WaitForDeliveryCompleted = 12,
+  WaitForArrivalConditionCheck = 13,
+  WaitForCommentQESendFeedback = 14,
+  WaitForFinalApproval = 15,
+  ShipmentCompleted = 16,
+}

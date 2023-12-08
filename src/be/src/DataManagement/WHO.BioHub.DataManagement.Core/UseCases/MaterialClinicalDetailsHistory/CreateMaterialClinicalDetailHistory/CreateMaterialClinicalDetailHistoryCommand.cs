@@ -1,0 +1,3 @@
+namespace WHO.BioHub.DataManagement.Core.UseCases.MaterialClinicalDetailsHistory.CreateMaterialClinicalDetailHistory;
+
+public record struct CreateMaterialClinicalDetailHistoryCommand { }

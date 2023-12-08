@@ -1,0 +1,5 @@
+using WHO.BioHub.Models.Models;
+
+namespace WHO.BioHub.PublicData.Core.UseCases.InternationalTaxonomyClassifications.ReadInternationalTaxonomyClassification;
+
+public record struct ReadInternationalTaxonomyClassificationQueryResponse(InternationalTaxonomyClassification InternationalTaxonomyClassification) { }

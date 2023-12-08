@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\WHO.BioHub.Identity\WHO.BioHub.Identity.csproj" />
+        <ProjectReference Include="..\WHO.BioHub.DataManagement.Core\WHO.BioHub.DataManagement.Core.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\WHO.BioHub.DataManagement.Core\WHO.BioHub.DataManagement.Core.csproj" />
+        <ProjectReference Include="..\..\WHO.BioHub.Models\WHO.BioHub.Models.csproj" />
+        <ProjectReference Include="..\..\WHO.BioHub.Shared\WHO.BioHub.Shared.csproj" />
+        <ProjectReference Include="..\..\WHO.BioHub.DAL\WHO.BioHub.DAL.csproj" />
+        <ProjectReference Include="..\..\WHO.BioHub.API.Http.Extensions\WHO.BioHub.API.Http.Extensions.csproj" />
+    </ItemGroup>
+</Project>

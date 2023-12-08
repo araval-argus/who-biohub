@@ -1,0 +1,3 @@
+namespace WHO.BioHub.DataManagement.Core.UseCases.WorklistFromBioHubHistoryItems.CreateWorklistFromBioHubHistoryItem;
+
+public record struct CreateWorklistFromBioHubHistoryItemCommand { }

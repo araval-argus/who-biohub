@@ -1,0 +1,25 @@
+using WHO.BioHub.Models.Models;
+
+namespace WHO.BioHub.{{.Module.Name}}.Core.UseCases.{{.Entity.Plural}}.Update{{.Entity.Singular}};
+
+public interface IUpdate{{.Entity.Singular}}Mapper
+{
+    {{.Entity.Singular}} Map({{.Entity.Singular}} {{.Entity.Singular | lower}}, Update{{.Entity.Singular}}Command command);
+}
+
+public class Update{{.Entity.Singular}}Mapper : IUpdate{{.Entity.Singular}}Mapper
+{
+    public {{.Entity.Singular}} Map({{.Entity.Singular}} {{.Entity.Singular | lower}}, Update{{.Entity.Singular}}Command command)
+    {
+        // TODO: Implement mapper
+
+        {{.Entity.Singular | lower}}.Id = command.Id;
+        {{.Entity.Singular | lower}}.CreationDate = DateTime.UtcNow;
+
+        // ...
+
+        {{.Entity.Singular | lower}}.DeletedOn = null;
+
+        return {{.Entity.Singular | lower}};
+    }
+}

@@ -1,0 +1,58 @@
+trigger:
+  tags:
+    include:
+      - data-func/v*.*.*
+
+resources:
+  - repo: self
+
+variables:
+  agent: "ubuntu-latest"
+
+jobs:
+  - job: BuildFunctionApp
+    steps:
+      - checkout: self
+        clean: true
+        submodules: false
+
+      - bash: |
+          set -ex
+
+          # get version from tag
+          tag=$(git describe --tags --abbrev=0 | sed -E 's/^.*\/v([0-9]+\.[0-9]+\.[0-9]+)$/\1/')
+
+          # persist certificates from pipeline's secret
+          f="$(mktemp).pem"
+          trap 'cleanup' ERR
+          cleanup() {
+            rm -f "$f" "$fpem"
+          }
+          echo "$(servicePrincipalCertificatePEM)" | base64 -d - > $f
+
+          # AZ CLI login as Provisioner Service Principal
+          az login --service-principal \
+            -u $(servicePrincipalid) \
+            -p $f \
+            --tenant $(tenantId)
+
+          # Login into the Container Registry
+          az acr login -n $(WHOBioHubContainerRegistry)
+
+          # Build and push image
+          export WHOBIOHUB_FUNC_DATA_VERSION=$tag
+          export WHOBIOHUB_FUNC_DOCUMENT_VERSION=$tag
+          export WHOBIOHUB_FUNC_SEARCH_VERSION=$tag
+          export WHOBIOHUB_FUNC_PUBLICDATA_VERSION=$tag
+          
+          docker compose \
+            -f "src/docker-compose.dev.yml" \
+            build func-data func-document func-search func-publicdata
+
+          docker compose \
+            -f "src/docker-compose.dev.yml" \
+            push func-data func-document func-search func-publicdata
+        displayName: "Build and Push Data Management image"
+        env:
+          WHOBIOHUB_CR: $(WHOBioHubContainerRegistry).azurecr.io
+

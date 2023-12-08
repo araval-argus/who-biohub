@@ -1,0 +1,5 @@
+using WHO.BioHub.Models.Models;
+
+namespace WHO.BioHub.DataManagement.Core.UseCases.MaterialShippingInformationsHistory.ReadMaterialShippingInformationHistory;
+
+public record struct ReadMaterialShippingInformationHistoryQueryResponse(MaterialShippingInformationHistory MaterialShippingInformationHistory) { }

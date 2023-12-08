@@ -1,0 +1,105 @@
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using WHO.BioHub.{{.Module.Name}}.Core.UseCases.{{.Entity.Plural}}.Create{{.Entity.Singular}};
+using WHO.BioHub.{{.Module.Name}}.Core.UseCases.{{.Entity.Plural}}.Delete{{.Entity.Singular}};
+using WHO.BioHub.{{.Module.Name}}.Core.UseCases.{{.Entity.Plural}}.List{{.Entity.Plural}};
+using WHO.BioHub.{{.Module.Name}}.Core.UseCases.{{.Entity.Plural}}.Read{{.Entity.Singular}};
+using WHO.BioHub.{{.Module.Name}}.Core.UseCases.{{.Entity.Plural}}.Update{{.Entity.Singular}};
+using WHO.BioHub.API.Http.Extensions;
+using WHO.BioHub.Shared.Utils;
+
+namespace WHO.BioHub.{{.Module.Name}}.API.Http.Controllers;
+
+public interface I{{.Entity.Plural}}Controller
+{
+    Task<IActionResult> Create(HttpRequest request, CancellationToken cancellationToken);
+    Task<IActionResult> Read(HttpRequest request, Guid id, CancellationToken cancellationToken);
+    Task<IActionResult> Update(HttpRequest request, Guid id, CancellationToken cancellationToken);
+    Task<IActionResult> Delete(HttpRequest request, Guid id, CancellationToken cancellationToken);
+    Task<IActionResult> List(HttpRequest request, CancellationToken cancellationToken);
+}
+
+public class {{.Entity.Plural}}Controller : ControllerBase, I{{.Entity.Plural}}Controller
+{
+    private readonly ICreate{{.Entity.Singular}}Handler _create{{.Entity.Singular}}Handler;
+    private readonly IRead{{.Entity.Singular}}Handler _read{{.Entity.Singular}}Handler;
+    private readonly IUpdate{{.Entity.Singular}}Handler _update{{.Entity.Singular}}Handler;
+    private readonly IDelete{{.Entity.Singular}}Handler _delete{{.Entity.Singular}}Handler;
+    private readonly IList{{.Entity.Plural}}Handler _list{{.Entity.Plural}}Handler;
+
+    public {{.Entity.Plural}}Controller(
+        ICreate{{.Entity.Singular}}Handler create{{.Entity.Singular}}Handler,
+        IRead{{.Entity.Singular}}Handler read{{.Entity.Singular}}Handler,
+        IUpdate{{.Entity.Singular}}Handler update{{.Entity.Singular}}Handler,
+        IDelete{{.Entity.Singular}}Handler delete{{.Entity.Singular}}Handler,
+        IList{{.Entity.Plural}}Handler list{{.Entity.Plural}}Handler)
+    {
+        _create{{.Entity.Singular}}Handler = create{{.Entity.Singular}}Handler;
+        _read{{.Entity.Singular}}Handler = read{{.Entity.Singular}}Handler;
+        _update{{.Entity.Singular}}Handler = update{{.Entity.Singular}}Handler;
+        _delete{{.Entity.Singular}}Handler = delete{{.Entity.Singular}}Handler;
+        _list{{.Entity.Plural}}Handler = list{{.Entity.Plural}}Handler;
+    }
+
+    public async Task<IActionResult> Create(HttpRequest request, CancellationToken cancellationToken)
+    {
+        Either<Create{{.Entity.Singular}}Command, Errors> body =
+            await request.ParseBodyJson<Create{{.Entity.Singular}}Command>(cancellationToken);
+        if (body.IsRight)
+            return body.Right.ToIActionResult();
+
+        Either<Create{{.Entity.Singular}}CommandResponse, Errors> result =
+            await _create{{.Entity.Singular}}Handler.Handle(body.Left, cancellationToken);
+        if (result.IsRight)
+            return result.Right.ToIActionResult();
+
+        return new OkObjectResult(result.Left);
+    }
+
+    public async Task<IActionResult> Delete(HttpRequest request, Guid id, CancellationToken cancellationToken)
+    {
+        Either<Delete{{.Entity.Singular}}CommandResponse, Errors> result =
+            await _delete{{.Entity.Singular}}Handler.Handle(new(Id: id), cancellationToken);
+        if (result.IsRight)
+            return result.Right.ToIActionResult();
+
+        return new OkObjectResult(result.Left);
+    }
+
+    public async Task<IActionResult> List(HttpRequest request, CancellationToken cancellationToken)
+    {
+        Either<List{{.Entity.Plural}}QueryResponse, Errors> result =
+            await _list{{.Entity.Plural}}Handler.Handle(new(), cancellationToken);
+
+        if (result.IsRight)
+            return result.Right.ToIActionResult();
+
+        return new OkObjectResult(result.Left);
+    }
+
+    public async Task<IActionResult> Read(HttpRequest request, Guid id, CancellationToken cancellationToken)
+    {
+        Either<Read{{.Entity.Singular}}QueryResponse, Errors> result =
+            await _read{{.Entity.Singular}}Handler.Handle(new(Id: id), cancellationToken);
+
+        if (result.IsRight)
+            return result.Right.ToIActionResult();
+
+        return new OkObjectResult(result.Left);
+    }
+
+    public async Task<IActionResult> Update(HttpRequest request, Guid id, CancellationToken cancellationToken)
+    {
+        Either<Update{{.Entity.Singular}}Command, Errors> body =
+            await request.ParseBodyJson<Update{{.Entity.Singular}}Command>((cmd) => cmd.Id = id, cancellationToken);
+        if (body.IsRight)
+            return body.Right.ToIActionResult();
+
+        Either<Update{{.Entity.Singular}}CommandResponse, Errors> result =
+            await _update{{.Entity.Singular}}Handler.Handle(body.Left, cancellationToken);
+        if (result.IsRight)
+            return result.Right.ToIActionResult();
+
+        return new OkObjectResult(result.Left);
+    }
+}

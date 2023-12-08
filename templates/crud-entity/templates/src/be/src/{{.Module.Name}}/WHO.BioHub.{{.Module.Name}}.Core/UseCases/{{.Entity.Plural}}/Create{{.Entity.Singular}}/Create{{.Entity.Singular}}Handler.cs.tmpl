@@ -1,0 +1,60 @@
+using FluentValidation.Results;
+using Microsoft.Extensions.Logging;
+using WHO.BioHub.Models.Models;
+using WHO.BioHub.Models.Repositories.{{.Entity.Plural}};
+using WHO.BioHub.Shared.Utils;
+
+namespace WHO.BioHub.{{.Module.Name}}.Core.UseCases.{{.Entity.Plural}}.Create{{.Entity.Singular}};
+
+public interface ICreate{{.Entity.Singular}}Handler
+{
+    Task<Either<Create{{.Entity.Singular}}CommandResponse, Errors>> Handle(Create{{.Entity.Singular}}Command command, CancellationToken cancellationToken);
+}
+
+public class Create{{.Entity.Singular}}Handler : ICreate{{.Entity.Singular}}Handler
+{
+    private readonly ILogger<Create{{.Entity.Singular}}Handler> _logger;
+    private readonly Create{{.Entity.Singular}}CommandValidator _validator;
+    private readonly ICreate{{.Entity.Singular}}Mapper _mapper;
+    private readonly I{{.Entity.Singular}}WriteRepository _writeRepository;
+
+    public Create{{.Entity.Singular}}Handler(
+        ILogger<Create{{.Entity.Singular}}Handler> logger,
+        Create{{.Entity.Singular}}CommandValidator validator,
+        ICreate{{.Entity.Singular}}Mapper mapper,
+        I{{.Entity.Singular}}WriteRepository writeRepository
+    )
+    {
+        _logger = logger;
+        _validator = validator;
+        _mapper = mapper;
+        _writeRepository = writeRepository;
+    }
+
+    public async Task<Either<Create{{.Entity.Singular}}CommandResponse, Errors>> Handle(
+        Create{{.Entity.Singular}}Command command,
+        CancellationToken cancellationToken)
+    {
+        ValidationResult validationResult = await _validator.ValidateAsync(command, cancellationToken);
+        if (!validationResult.IsValid)
+            return new(new Errors(validationResult));
+
+        {{.Entity.Singular}} {{.Entity.Singular | lower}} = _mapper.Map(command);
+
+        try
+        {
+            Either<{{.Entity.Singular}}, Errors> response = await _writeRepository.Create({{.Entity.Singular | lower}}, cancellationToken);
+            if (response.IsRight)
+                return new(response.Right);
+
+            {{.Entity.Singular}} created{{.Entity.Singular}} =
+                response.Left ?? throw new Exception("This is a bug: {{.Entity.Singular | lower}} value must be defined");
+            return new(new Create{{.Entity.Singular}}CommandResponse(response.Left));
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error creating a new {{.Entity.Singular}}");
+            throw;
+        }
+    }
+}

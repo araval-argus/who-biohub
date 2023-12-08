@@ -1,0 +1,66 @@
+using System.Net;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
+using Microsoft.Extensions.Logging;
+using WHO.BioHub.Search.API.Http.Controllers.{{.Rule.Name}};
+using WHO.BioHub.Search.Core.UseCases.{{.Entity.Plural}}.{{.Rule.Name}};
+using WHO.BioHub.Shared.Utils;
+
+namespace WHO.BioHub.Search.FunctionApp.Functions.Entities.{{.Entity.Plural}};
+
+public class {{.Rule.Name}}
+{
+    private readonly I{{.Rule.Name}}Controller _controller;
+
+    public {{.Rule.Name}}(I{{.Rule.Name}}Controller controller)
+    {
+        _controller = controller;
+    }
+
+    [FunctionName(nameof({{.Rule.Name}}))]
+    [OpenApiOperation(operationId: "{{.Rule.Name}}")]
+    [OpenApiRequestBody(
+        contentType: "application/json",
+        bodyType: typeof({{.Rule.Name}}Query)
+    )]
+    [OpenApiResponseWithBody(
+        statusCode: HttpStatusCode.OK,
+        contentType: "application/json",
+        bodyType: typeof({{.Rule.Name}}QueryResponse),
+        Description = "The OK response")]
+    [OpenApiResponseWithBody(
+        statusCode: HttpStatusCode.NotFound,
+        contentType: "application/json",
+        bodyType: typeof(Errors),
+        Description = "Resource not found")]
+    [OpenApiResponseWithBody(
+        statusCode: HttpStatusCode.BadRequest,
+        contentType: "application/json",
+        bodyType: typeof(Errors),
+        Description = "Bad request")]
+    public async Task<IActionResult> CreateAsync(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "{{.Entity.Singular}}/{{.Endpoint.Path}}")] HttpRequest req,
+        ILogger log,
+        CancellationToken funcCancellationToken)
+    {
+        try
+        {
+            log.LogInformation("Search {{.Rule.Name}} (HttpTrigger) invoked.");
+
+            CancellationTokenSource cancellationSource =
+                CancellationTokenSource.CreateLinkedTokenSource(funcCancellationToken, req.HttpContext.RequestAborted);
+            CancellationToken cancellationToken = cancellationSource.Token;
+
+            IActionResult response = await _controller.{{.Rule.Name}}(req, cancellationToken);
+            return response;
+        }
+        catch (Exception e)
+        {
+            log.LogError(e, "Error executing search {{.Rule.Name}} function");
+            throw;
+        }
+    }
+}

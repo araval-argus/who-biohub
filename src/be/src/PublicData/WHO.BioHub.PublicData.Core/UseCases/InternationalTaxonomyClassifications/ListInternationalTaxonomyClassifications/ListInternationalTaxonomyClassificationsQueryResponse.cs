@@ -1,0 +1,6 @@
+using WHO.BioHub.Models.Models;
+using WHO.BioHub.PublicData.Core.Dto;
+
+namespace WHO.BioHub.PublicData.Core.UseCases.InternationalTaxonomyClassifications.ListInternationalTaxonomyClassifications;
+
+public record struct ListInternationalTaxonomyClassificationsQueryResponse(IEnumerable<InternationalTaxonomyClassificationPublicDto> InternationalTaxonomyClassifications) { }
