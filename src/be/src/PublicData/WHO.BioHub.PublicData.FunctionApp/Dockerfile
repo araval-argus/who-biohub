@@ -28,6 +28,9 @@ COPY [ \
     "WHO.BioHub.Shared/WHO.BioHub.Shared.csproj", \
     "WHO.BioHub.Shared/WHO.BioHub.Shared.csproj"]
 COPY [ \
+    "WHO.BioHub.StorageAccount/WHO.BioHub.StorageAccount.csproj", \
+    "WHO.BioHub.StorageAccount/WHO.BioHub.StorageAccount.csproj"]    
+COPY [ \
     "WHO.BioHub.API.Http.Extensions/WHO.BioHub.API.Http.Extensions.csproj", \
     "WHO.BioHub.API.Http.Extensions/WHO.BioHub.API.Http.Extensions.csproj"]
 COPY [ \
@@ -53,6 +56,7 @@ COPY [ "WHO.BioHub.DAL", "WHO.BioHub.DAL" ]
 COPY [ "WHO.BioHub.Models", "WHO.BioHub.Models"]
 COPY [ "WHO.BioHub.Notifications", "WHO.BioHub.Notifications" ]
 COPY [ "WHO.BioHub.Shared", "WHO.BioHub.Shared"]
+COPY [ "WHO.BioHub.StorageAccount", "WHO.BioHub.StorageAccount"]
 COPY [ "WHO.BioHub.API.Http.Extensions", "WHO.BioHub.API.Http.Extensions"]
 COPY [ \
     "PublicData/WHO.BioHub.PublicData.Core", \

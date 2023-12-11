@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "WHO.BioHub.PublicData.FunctionApp": {
+      "commandName": "Project",
+      "commandLineArgs": "--csharp --port 12081",
+      "environmentVariables": {
+        "ConnectionStrings__SQLServer": "Data Source=.;Initial Catalog=biohub;Integrated Security=True;Encrypt=False",
+        "OpenApi__HostNames": "http://localhost:12081/api"
+      }
+    }
+  }
+}
